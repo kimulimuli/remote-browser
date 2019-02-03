@@ -2,7 +2,7 @@ import { TreeItem, TreeDataProvider } from "vscode";
 import { RemoteConnection, ConnectionStatus } from './RemoteConnection';
 import { FileNode } from './FileNode';
 import * as vscode from 'vscode';
-import * as ssh2 from 'ssh2';
+import {ConnConfig} from './ConnConfig';
 
 
 export class RemoteFileTreeProvider implements TreeDataProvider<TreeItem> {
@@ -18,14 +18,27 @@ export class RemoteFileTreeProvider implements TreeDataProvider<TreeItem> {
     constructor(config: vscode.WorkspaceConfiguration) {
     }
 
-    public connect(config: vscode.WorkspaceConfiguration, connectConfig: ssh2.ConnectConfig) {
+
+
+    public connect(config: vscode.WorkspaceConfiguration, connectConfig: ConnConfig) {
+        var self = this;
+
+        var onConnect = function() {
+            if(connectConfig.defaultPath) {
+                self.changePath(connectConfig.defaultPath);
+            }
+        }
+
         this.config = config;
-        this.remoteConnection = new RemoteConnection(this.config, connectConfig, this._onDidChangeTreeData);
+        this.remoteConnection = new RemoteConnection(this.config, connectConfig, this._onDidChangeTreeData, onConnect);
+       // var x = this.onDidChangeTreeData(onConnect);
     }
+
 
     public endSession() {
         return this.remoteConnection.end().then((res) => {
             this.remoteConnection.connStatus = ConnectionStatus.Disconnected;
+            this.remoteConnection.statusBar.dispose();
             this._onDidChangeTreeData.fire();
         });
     }

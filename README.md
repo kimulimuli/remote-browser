@@ -31,7 +31,8 @@ A lightweight extension that allows you to browse and edit remote files over SFT
         "username": "remoteuser", // MANDATORY
         "privateKey": "C:/Users/myuser/.ssh/id_rsa",  // Path to private key on local machine
         "localHostname": "myhost",
-        "localUsername": "myuser"   // Identify as myuser@myhost
+        "localUsername": "myuser",   // Identify as myuser@myhost
+        "defaultPath": "/usr/local/bin" // Default directory to start in on connect (Absolute path)
     },
     // Optional array to configure additional connections 
     "remoteBrowser.additionalConnections": [{
@@ -60,6 +61,10 @@ See the User Settings file for more info.
 Feel free to open an issue or drop a pull request!
 
 ## Release Notes
+### 0.7
+* Bottom status bar now displays file saving status.
+* Added a defaultPath option which specifies a default directory to cd into on initial connect.
+
 ### 0.6
 * Added support for multiple connections.
 * Fixed issue of password prompt being undismissable.
